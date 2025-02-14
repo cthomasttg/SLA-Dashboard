@@ -1,0 +1,43 @@
+import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Sample Data (Replace with actual data source)
+data = {
+    "Date": ["2024-02-01", "2024-02-02", "2024-02-03", "2024-02-04", "2024-02-05"],
+    "Received": [100, 120, 110, 130, 125],
+    "Completed": [90, 100, 95, 110, 115],
+    "Backlog": [10, 20, 25, 20, 10],
+    "Processing_Time": [8, 7, 9, 6, 7],
+}
+
+df = pd.DataFrame(data)
+
+# Calculate Metrics
+completion_rate = (df["Completed"].sum() / df["Received"].sum()) * 100
+backlog = df["Backlog"].sum()
+avg_processing_time = df["Processing_Time"].mean()
+
+# Streamlit Dashboard Layout
+st.title("Daily SLA Performance Dashboard")
+st.metric("Completion Rate", f"{completion_rate:.2f}%")
+st.metric("Total Backlog", backlog)
+st.metric("Avg Processing Time", f"{avg_processing_time:.2f} days")
+
+# Visualization: Backlog Trends
+plt.figure(figsize=(10,5))
+plt.plot(df["Date"], df["Backlog"], marker="o", linestyle="-")
+plt.xlabel("Date")
+plt.ylabel("Backlog Count")
+plt.title("Backlog Trend Over Time")
+st.pyplot(plt)
+
+# Visualization: Completion Trends
+plt.figure(figsize=(10,5))
+plt.plot(df["Date"], df["Completed"], marker="s", linestyle="-", label="Completed")
+plt.plot(df["Date"], df["Received"], marker="o", linestyle="--", label="Received")
+plt.xlabel("Date")
+plt.ylabel("Transaction Count")
+plt.title("Received vs Completed Transactions")
+plt.legend()
+st.pyplot(plt)
